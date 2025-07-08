@@ -11,7 +11,7 @@ import { PhotosForm } from "@/components/onboarding/PhotosForm";
 import { SocialForm } from "@/components/onboarding/SocialForm";
 import { useToast } from "@/hooks/use-toast";
 import heroImage from "@/assets/hero-bg.jpg";
-import menuLogo from "@/assets/menu-ca-logo-green.png";
+import menuLogo from "@/assets/menu-ca-logo.png";
 import { supabase } from "@/integrations/supabase/client";
 import { useFileUpload } from "@/hooks/useFileUpload";
 
