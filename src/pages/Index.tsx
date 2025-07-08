@@ -17,7 +17,7 @@ const Index = () => {
       >
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative h-full flex flex-col items-center justify-center text-center text-white px-4">
-          <img src={menuLogo} alt="Menu.ca" className="w-64 h-auto mb-8" />
+          <img src={menuLogo} alt="Menu.ca" className="w-64 h-auto mb-8 p-4 bg-white rounded-lg" />
           <p className="text-xl md:text-2xl mb-8 max-w-2xl">
             Join our restaurant directory and tell us about your business
           </p>
