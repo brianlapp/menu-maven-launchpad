@@ -222,6 +222,151 @@ export type Database = {
           },
         ]
       }
+      restaurant_dishes: {
+        Row: {
+          created_at: string
+          description: string
+          display_order: number
+          id: string
+          image_url: string | null
+          name: string
+          restaurant_submission_id: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          name: string
+          restaurant_submission_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          name?: string
+          restaurant_submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_dishes_restaurant_submission_id_fkey"
+            columns: ["restaurant_submission_id"]
+            isOneToOne: false
+            referencedRelation: "restaurant_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurant_photos: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          image_url: string
+          restaurant_submission_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url: string
+          restaurant_submission_id: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string
+          restaurant_submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_photos_restaurant_submission_id_fkey"
+            columns: ["restaurant_submission_id"]
+            isOneToOne: false
+            referencedRelation: "restaurant_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurant_submissions: {
+        Row: {
+          about_image_url: string | null
+          address: string
+          comments: string | null
+          created_at: string
+          delivery_areas: string
+          delivery_instructions: string | null
+          email: string
+          facebook: string | null
+          founded_year: string | null
+          generated_site_url: string | null
+          hours: string
+          id: string
+          instagram: string | null
+          menu_pdf_url: string | null
+          owner_quote: string | null
+          phone: string | null
+          restaurant_name: string
+          status: string
+          story: string
+          twitter: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          about_image_url?: string | null
+          address: string
+          comments?: string | null
+          created_at?: string
+          delivery_areas: string
+          delivery_instructions?: string | null
+          email: string
+          facebook?: string | null
+          founded_year?: string | null
+          generated_site_url?: string | null
+          hours: string
+          id?: string
+          instagram?: string | null
+          menu_pdf_url?: string | null
+          owner_quote?: string | null
+          phone?: string | null
+          restaurant_name: string
+          status?: string
+          story: string
+          twitter?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          about_image_url?: string | null
+          address?: string
+          comments?: string | null
+          created_at?: string
+          delivery_areas?: string
+          delivery_instructions?: string | null
+          email?: string
+          facebook?: string | null
+          founded_year?: string | null
+          generated_site_url?: string | null
+          hours?: string
+          id?: string
+          instagram?: string | null
+          menu_pdf_url?: string | null
+          owner_quote?: string | null
+          phone?: string | null
+          restaurant_name?: string
+          status?: string
+          story?: string
+          twitter?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
       scraping_configurations: {
         Row: {
           anthropic_api_key: string | null
