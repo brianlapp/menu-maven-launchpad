@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-bg.jpg";
-import menuLogo from "@/assets/menu-ca-logo.png";
+const menuLogo = "https://i.imgur.com/AYyrnpP.png";
 
 const Index = () => {
   const navigate = useNavigate();
