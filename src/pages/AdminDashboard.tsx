@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import menuLogo from "@/assets/menu-ca-logo.svg";
+import menuLogo from "@/assets/menu-ca-logo.png";
 import { useRestaurantSubmissions } from "@/hooks/useRestaurantSubmissions";
 
 
