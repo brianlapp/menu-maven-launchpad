@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChefHat, ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProgressIndicator } from "@/components/ProgressIndicator";
 import { BusinessInfoForm } from "@/components/onboarding/BusinessInfoForm";
@@ -11,6 +11,9 @@ import { PhotosForm } from "@/components/onboarding/PhotosForm";
 import { SocialForm } from "@/components/onboarding/SocialForm";
 import { useToast } from "@/hooks/use-toast";
 import heroImage from "@/assets/hero-bg.jpg";
+import menuLogo from "@/assets/menu-ca-logo.svg";
+import { supabase } from "@/integrations/supabase/client";
+import { useFileUpload } from "@/hooks/useFileUpload";
 
 export interface RestaurantData {
   businessInfo: {
@@ -90,7 +93,9 @@ export default function RestaurantOnboarding() {
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
   const [formData, setFormData] = useState<RestaurantData>(initialData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { uploadImage, uploadPDF, uploading } = useFileUpload();
 
   const updateFormData = (section: keyof RestaurantData, data: any) => {
     setFormData(prev => ({
@@ -148,20 +153,116 @@ export default function RestaurantOnboarding() {
   };
 
   const handleSubmit = async () => {
+    setIsSubmitting(true);
     try {
-      // Here you would typically send data to your backend
-      console.log("Submitting restaurant data:", formData);
+      // Upload files first
+      let aboutImageUrl = null;
+      let menuPdfUrl = null;
+      const photoUrls: string[] = [];
+      const dishImageUrls: { [key: number]: string } = {};
+
+      // Upload about image if exists
+      if (formData.about.aboutImage) {
+        aboutImageUrl = await uploadImage(formData.about.aboutImage, `about/${Date.now()}-about`);
+      }
+
+      // Upload menu PDF if exists
+      if (formData.menuPdf) {
+        menuPdfUrl = await uploadPDF(formData.menuPdf, `menus/${Date.now()}-menu`);
+      }
+
+      // Upload restaurant photos
+      for (let i = 0; i < formData.photos.length; i++) {
+        const url = await uploadImage(formData.photos[i], `photos/${Date.now()}-photo-${i}`);
+        photoUrls.push(url);
+      }
+
+      // Upload dish images
+      for (let i = 0; i < formData.popularDishes.length; i++) {
+        if (formData.popularDishes[i].image) {
+          const url = await uploadImage(formData.popularDishes[i].image!, `dishes/${Date.now()}-dish-${i}`);
+          dishImageUrls[i] = url;
+        }
+      }
+
+      // Create restaurant submission
+      const { data: submission, error: submissionError } = await supabase
+        .from('restaurant_submissions')
+        .insert({
+          restaurant_name: formData.businessInfo.name,
+          address: formData.businessInfo.address,
+          email: formData.businessInfo.email,
+          phone: formData.businessInfo.phone,
+          website: formData.businessInfo.website,
+          founded_year: formData.about.foundedYear,
+          story: formData.about.story,
+          owner_quote: formData.about.ownerQuote,
+          about_image_url: aboutImageUrl,
+          menu_pdf_url: menuPdfUrl,
+          delivery_areas: formData.deliveryHours.deliveryAreas,
+          delivery_instructions: formData.deliveryHours.instructions,
+          hours: formData.deliveryHours.hours,
+          instagram: formData.social.instagram,
+          facebook: formData.social.facebook,
+          twitter: formData.social.twitter,
+          comments: formData.social.comments,
+        })
+        .select()
+        .single();
+
+      if (submissionError) throw submissionError;
+
+      // Insert dishes
+      if (formData.popularDishes.length > 0) {
+        const dishesData = formData.popularDishes.map((dish, index) => ({
+          restaurant_submission_id: submission.id,
+          name: dish.name,
+          description: dish.description,
+          image_url: dishImageUrls[index] || null,
+          display_order: index,
+        }));
+
+        const { error: dishesError } = await supabase
+          .from('restaurant_dishes')
+          .insert(dishesData);
+
+        if (dishesError) throw dishesError;
+      }
+
+      // Insert photos
+      if (photoUrls.length > 0) {
+        const photosData = photoUrls.map((url, index) => ({
+          restaurant_submission_id: submission.id,
+          image_url: url,
+          display_order: index,
+        }));
+
+        const { error: photosError } = await supabase
+          .from('restaurant_photos')
+          .insert(photosData);
+
+        if (photosError) throw photosError;
+      }
       
       toast({
         title: "Restaurant information submitted!",
         description: "Thank you for sharing your restaurant details with us.",
       });
+
+      // Reset form
+      setFormData(initialData);
+      setCurrentStep(0);
+      setCompletedSteps(new Set());
+      
     } catch (error) {
+      console.error('Submission error:', error);
       toast({
         title: "Submission failed",
         description: "Please try again or contact support.",
         variant: "destructive"
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -230,9 +331,9 @@ export default function RestaurantOnboarding() {
       >
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative h-full flex flex-col items-center justify-center text-center text-white px-4">
-          <ChefHat className="w-12 h-12 mb-4" />
+          <img src={menuLogo} alt="Menu.ca" className="w-48 h-auto mb-4" />
           <h1 className="text-3xl md:text-4xl font-bold mb-2">
-            Welcome to Menu.com
+            Welcome to Menu.ca
           </h1>
           <p className="text-lg opacity-90">
             Tell us about your restaurant and share your story
@@ -272,9 +373,9 @@ export default function RestaurantOnboarding() {
             <Button
               type="button"
               onClick={handleNext}
-              disabled={!isStepValid(currentStep) && currentStep !== 6}
+              disabled={(!isStepValid(currentStep) && currentStep !== 6) || isSubmitting || uploading}
             >
-              {currentStep === steps.length - 1 ? "Submit" : "Next"}
+              {isSubmitting ? "Submitting..." : currentStep === steps.length - 1 ? "Submit" : "Next"}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>

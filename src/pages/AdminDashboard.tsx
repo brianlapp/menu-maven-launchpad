@@ -1,38 +1,13 @@
 import { useState } from "react";
-import { ChefHat, Eye, FileText, Calendar, Search, Filter } from "lucide-react";
+import { Eye, FileText, Calendar, Search, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import menuLogo from "@/assets/menu-ca-logo.svg";
+import { useRestaurantSubmissions } from "@/hooks/useRestaurantSubmissions";
 
-// Mock data - will be replaced with Supabase data
-const mockSubmissions = [
-  {
-    id: 1,
-    restaurantName: "Tony's Pizza Palace",
-    submittedAt: "2024-01-15",
-    status: "submitted",
-    email: "tony@pizzapalace.com",
-    address: "123 Main St, New York, NY"
-  },
-  {
-    id: 2,
-    restaurantName: "Sakura Sushi",
-    submittedAt: "2024-01-14",
-    status: "in-review",
-    email: "info@sakurasushi.com",
-    address: "456 Oak Ave, Los Angeles, CA"
-  },
-  {
-    id: 3,
-    restaurantName: "Burger Junction",
-    submittedAt: "2024-01-13",
-    status: "generated",
-    email: "hello@burgerjunction.com",
-    address: "789 Pine St, Chicago, IL"
-  }
-];
 
 const statusColors = {
   submitted: "bg-blue-100 text-blue-800",
@@ -45,9 +20,10 @@ export default function AdminDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const navigate = useNavigate();
+  const { submissions, loading, error, updateSubmissionStatus } = useRestaurantSubmissions();
 
-  const filteredSubmissions = mockSubmissions.filter(submission => {
-    const matchesSearch = submission.restaurantName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  const filteredSubmissions = submissions.filter(submission => {
+    const matchesSearch = submission.restaurant_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          submission.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || submission.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -59,7 +35,7 @@ export default function AdminDashboard() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-3">
-            <ChefHat className="w-8 h-8 text-primary" />
+            <img src={menuLogo} alt="Menu.ca" className="w-16 h-auto" />
             <div>
               <h1 className="text-3xl font-bold">Restaurant Submissions</h1>
               <p className="text-muted-foreground">Manage and review restaurant directory submissions</p>
@@ -77,7 +53,7 @@ export default function AdminDashboard() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Submissions</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{mockSubmissions.length}</div>
+              <div className="text-2xl font-bold">{submissions.length}</div>
             </CardContent>
           </Card>
           <Card>
@@ -86,7 +62,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {mockSubmissions.filter(s => s.status === "submitted").length}
+                {submissions.filter(s => s.status === "submitted").length}
               </div>
             </CardContent>
           </Card>
@@ -96,7 +72,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {mockSubmissions.filter(s => s.status === "in-review").length}
+                {submissions.filter(s => s.status === "in-review").length}
               </div>
             </CardContent>
           </Card>
@@ -106,7 +82,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {mockSubmissions.filter(s => s.status === "generated").length}
+                {submissions.filter(s => s.status === "generated").length}
               </div>
             </CardContent>
           </Card>
@@ -137,46 +113,67 @@ export default function AdminDashboard() {
         </div>
 
         {/* Submissions List */}
-        <div className="space-y-4">
-          {filteredSubmissions.map((submission) => (
-            <Card key={submission.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2">
-                      <h3 className="text-lg font-semibold">{submission.restaurantName}</h3>
-                      <Badge className={statusColors[submission.status as keyof typeof statusColors]}>
-                        {submission.status.replace("-", " ")}
-                      </Badge>
+        {loading ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Loading submissions...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-12">
+            <p className="text-destructive">Error: {error}</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {filteredSubmissions.map((submission) => (
+              <Card key={submission.id} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <h3 className="text-lg font-semibold">{submission.restaurant_name}</h3>
+                        <Badge className={statusColors[submission.status as keyof typeof statusColors]}>
+                          {submission.status.replace("-", " ")}
+                        </Badge>
+                      </div>
+                      <p className="text-muted-foreground text-sm mb-1">{submission.email}</p>
+                      <p className="text-muted-foreground text-sm mb-2">{submission.address}</p>
+                      <div className="flex items-center text-xs text-muted-foreground">
+                        <Calendar className="w-3 h-3 mr-1" />
+                        Submitted {new Date(submission.created_at).toLocaleDateString()}
+                      </div>
                     </div>
-                    <p className="text-muted-foreground text-sm mb-1">{submission.email}</p>
-                    <p className="text-muted-foreground text-sm mb-2">{submission.address}</p>
-                    <div className="flex items-center text-xs text-muted-foreground">
-                      <Calendar className="w-3 h-3 mr-1" />
-                      Submitted {submission.submittedAt}
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => navigate(`/admin/submission/${submission.id}`)}
-                    >
-                      <Eye className="w-4 h-4 mr-2" />
-                      View Details
-                    </Button>
-                    {submission.status === "in-review" && (
-                      <Button size="sm">
-                        <FileText className="w-4 h-4 mr-2" />
-                        Generate Site
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => navigate(`/admin/submission/${submission.id}`)}
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        View Details
                       </Button>
-                    )}
+                      {submission.status === "submitted" && (
+                        <Button 
+                          size="sm"
+                          onClick={() => updateSubmissionStatus(submission.id, "in-review")}
+                        >
+                          Start Review
+                        </Button>
+                      )}
+                      {submission.status === "in-review" && (
+                        <Button 
+                          size="sm"
+                          onClick={() => updateSubmissionStatus(submission.id, "generated")}
+                        >
+                          <FileText className="w-4 h-4 mr-2" />
+                          Generate Site
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
 
         {filteredSubmissions.length === 0 && (
           <div className="text-center py-12">
