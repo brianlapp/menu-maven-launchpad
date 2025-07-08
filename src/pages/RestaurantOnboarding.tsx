@@ -109,40 +109,17 @@ export default function RestaurantOnboarding() {
   };
 
   const isStepValid = (step: number): boolean => {
-    switch (step) {
-      case 0:
-        return !!(formData.businessInfo.name && formData.businessInfo.address && formData.businessInfo.email);
-      case 1:
-        return !!(formData.about.foundedYear && formData.about.story);
-      case 2:
-        return formData.popularDishes.length >= 3;
-      case 3:
-        return !!formData.menuPdf;
-      case 4:
-        return !!(formData.deliveryHours.deliveryAreas && formData.deliveryHours.hours);
-      case 5:
-        return formData.photos.length >= 3;
-      case 6:
-        return true; // Social is optional
-      default:
-        return false;
-    }
+    // All steps are now optional - users can proceed without filling anything
+    return true;
   };
 
   const handleNext = () => {
-    if (isStepValid(currentStep)) {
-      markStepCompleted(currentStep);
-      if (currentStep < steps.length - 1) {
-        setCurrentStep(currentStep + 1);
-      } else {
-        handleSubmit();
-      }
+    // Always allow progression since nothing is mandatory
+    markStepCompleted(currentStep);
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
     } else {
-      toast({
-        title: "Please complete required fields",
-        description: "Fill in all required information before proceeding.",
-        variant: "destructive"
-      });
+      handleSubmit();
     }
   };
 
@@ -370,7 +347,7 @@ export default function RestaurantOnboarding() {
             <Button
               type="button"
               onClick={handleNext}
-              disabled={(!isStepValid(currentStep) && currentStep !== 6) || isSubmitting || uploading}
+              disabled={isSubmitting || uploading}
             >
               {isSubmitting ? "Submitting..." : currentStep === steps.length - 1 ? "Submit" : "Next"}
               <ArrowRight className="w-4 h-4 ml-2" />
