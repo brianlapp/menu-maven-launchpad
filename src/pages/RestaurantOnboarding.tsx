@@ -153,8 +153,8 @@ export default function RestaurantOnboarding() {
       console.log("Submitting restaurant data:", formData);
       
       toast({
-        title: "Restaurant profile submitted!",
-        description: "We'll review your information and get your website ready soon.",
+        title: "Restaurant information submitted!",
+        description: "Thank you for sharing your restaurant details with us.",
       });
     } catch (error) {
       toast({
@@ -235,7 +235,7 @@ export default function RestaurantOnboarding() {
             Welcome to Menu.com
           </h1>
           <p className="text-lg opacity-90">
-            Let's create your restaurant's beautiful website
+            Tell us about your restaurant and share your story
           </p>
         </div>
       </div>

@@ -21,14 +21,14 @@ const Index = () => {
             Menu.com
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-2xl">
-            Get your restaurant online in minutes with our beautiful website generator
+            Join our restaurant directory and tell us about your business
           </p>
           <Button 
             size="lg" 
             className="text-lg px-8 py-6"
             onClick={() => navigate('/onboarding')}
           >
-            Get Started
+            Share Your Restaurant Info
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </div>
@@ -39,10 +39,10 @@ const Index = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Professional Restaurant Websites Made Simple
+              Connect Your Restaurant with Our Community
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Our onboarding system creates beautiful, responsive websites that showcase your restaurant perfectly
+              Share your restaurant's story, menu, and details to join our growing directory
             </p>
           </div>
 
@@ -50,9 +50,9 @@ const Index = () => {
             <Card className="text-center p-6">
               <CardContent className="pt-6">
                 <Clock className="w-12 h-12 text-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Quick Setup</h3>
+                <h3 className="text-xl font-semibold mb-2">Simple Survey</h3>
                 <p className="text-muted-foreground">
-                  Complete our simple form in 10-15 minutes and we'll handle the rest
+                  Tell us about your restaurant in 10-15 minutes with our easy form
                 </p>
               </CardContent>
             </Card>
@@ -60,9 +60,9 @@ const Index = () => {
             <Card className="text-center p-6">
               <CardContent className="pt-6">
                 <Star className="w-12 h-12 text-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Beautiful Design</h3>
+                <h3 className="text-xl font-semibold mb-2">Professional Listing</h3>
                 <p className="text-muted-foreground">
-                  Professional templates designed specifically for restaurants
+                  Your restaurant information organized and presented beautifully
                 </p>
               </CardContent>
             </Card>
@@ -70,9 +70,9 @@ const Index = () => {
             <Card className="text-center p-6">
               <CardContent className="pt-6">
                 <Users className="w-12 h-12 text-primary mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Customer Ready</h3>
+                <h3 className="text-xl font-semibold mb-2">Get Discovered</h3>
                 <p className="text-muted-foreground">
-                  Mobile-optimized sites that help customers find and order from you
+                  Join our directory and connect with customers looking for great food
                 </p>
               </CardContent>
             </Card>
@@ -84,10 +84,10 @@ const Index = () => {
       <div className="gradient-warm py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Get Started?
+            Ready to Join Our Directory?
           </h2>
           <p className="text-xl mb-8">
-            Join hundreds of restaurants already using Menu.com to grow their business online
+            Share your restaurant's story and connect with food lovers in your area
           </p>
           <Button 
             size="lg" 
@@ -95,7 +95,7 @@ const Index = () => {
             className="text-lg px-8 py-6"
             onClick={() => navigate('/onboarding')}
           >
-            Start Your Restaurant Website
+            Tell Us About Your Restaurant
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </div>
