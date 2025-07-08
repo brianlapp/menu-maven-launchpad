@@ -11,7 +11,7 @@ import { PhotosForm } from "@/components/onboarding/PhotosForm";
 import { SocialForm } from "@/components/onboarding/SocialForm";
 import { useToast } from "@/hooks/use-toast";
 import heroImage from "@/assets/hero-bg.jpg";
-import menuLogo from "@/assets/menu-ca-logo.svg";
+import menuLogo from "@/assets/menu-ca-logo-green.png";
 import { supabase } from "@/integrations/supabase/client";
 import { useFileUpload } from "@/hooks/useFileUpload";
 
@@ -332,9 +332,6 @@ export default function RestaurantOnboarding() {
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative h-full flex flex-col items-center justify-center text-center text-white px-4">
           <img src={menuLogo} alt="Menu.ca" className="w-48 h-auto mb-4" />
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">
-            Welcome to Menu.ca
-          </h1>
           <p className="text-lg opacity-90">
             Tell us about your restaurant and share your story
           </p>

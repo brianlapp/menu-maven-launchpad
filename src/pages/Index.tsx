@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-bg.jpg";
-import menuLogo from "@/assets/menu-ca-logo.svg";
+import menuLogo from "@/assets/menu-ca-logo-green.png";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -17,10 +17,7 @@ const Index = () => {
       >
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative h-full flex flex-col items-center justify-center text-center text-white px-4">
-          <img src={menuLogo} alt="Menu.ca" className="w-64 h-auto mb-6" />
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Menu.ca
-          </h1>
+          <img src={menuLogo} alt="Menu.ca" className="w-64 h-auto mb-8" />
           <p className="text-xl md:text-2xl mb-8 max-w-2xl">
             Join our restaurant directory and tell us about your business
           </p>
