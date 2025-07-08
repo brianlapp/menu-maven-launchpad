@@ -308,7 +308,7 @@ export default function RestaurantOnboarding() {
       >
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative h-full flex flex-col items-center justify-center text-center text-white px-4">
-          <img src={menuLogo} alt="Menu.ca" className="w-48 h-auto mb-4" />
+          <img src={menuLogo} alt="Menu.ca" className="w-48 h-auto mb-4 p-4 bg-white rounded-lg" />
           <p className="text-lg opacity-90">
             Tell us about your restaurant and share your story
           </p>
